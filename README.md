@@ -7,60 +7,32 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+## Dokumentasi API
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Penjelasan terkait pembuatan API Laravel ini dengan beberapa fitur yang saya sudah selesaikan sesuai dengan ketentuan yang sudah ditentukan. Berikut adalah dokumentasi API yang sudah saya buat dan penjelasan singkat mengenai fitur tersebut.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 1. Data Master
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+-   Master User memiliki 1 tabel untuk menampung data user. Data yang diinputkan adalah nama user, email, dan password.
+-   Master Post memiliki 1 tabel untuk menampung data post. Data yang diinputkan adalah title, content, seo_title, seo_description, meta_keyword, status dan category.
+-   Master Category memiliki 1 tabel untuk menampung data category. Data yang diinputkan adalah nama category dan description.
+-   Master Bookmark dimana ini akan menyimpan data post yang telah di bookmark oleh user saat ini atau sedang login.
+-   Semua fitur di master ini memiliki fitur create, update, delete, dan show.
 
-## Learning Laravel
+### 2. Fitur Laravel
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+-   Fitur Login dan Register dengan menggunakan middleware untuk membatasi akses halaman yang tidak boleh diakses oleh user yang tidak login. untuk fitur login ini akan mengecek apakah user tersebut sudah verified email atau belum dan fitur register ini akan membuat user baru dan mengirimkan email verifikasi ke email yang telah diinputkan.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+-   Upload Image digunakan pada fitur create post, update post dengan menggunakan fitur upload image Spatie Media Library.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 3. Fitur Enhancement atau tambahan
 
-## Laravel Sponsors
+-   Fitur forget password yang digunakan untuk mengatur password baru jika user lupa passwordnya dengan mengirimkan link email ke email user yang telah diinputkan. saya menggunakan mailtrap sebagai email service provider.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+-   Fitur Email Notification yang digunakan untuk memberikan notifikasi kepada user yang telah melakukan register atau mendaftar sebagai user baru.
 
-### Premium Partners
+-   Fitur Email Verification yang digunakan untuk memverifikasi email user yang telah mendaftar sebagai user baru untuk dapat login ke dalam sistem. karena ada middleware yang membatasi akses halaman yang tidak boleh diakses oleh user yang tidak terverified.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+-   Fitur Cachce yang digunakan untuk mempercepat proses pengambilan data dari database disini saya memakainya pada CRUD Data Master yang dimana setiap kali user hit endpoint tersebut maka pertama kali akan dicek database setelah itu akan disimpan di cache sehingga ketika user hit endpoint tersebut lagi maka akan langsung diambil dari cache. Jika data di cache sudah melebihi dari 5 menit maka akan dihapus dari cache dan diambil dari database lagi.
 
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+-   Fitur Event Listener dan Queue dimana ini berkesinambungan dalam proses pengiriman email verifikasi dan email notifikasi. jadi saya membuat event untuk reminder user jika telah mendaftar maka selanjutnya akan dikirimkan email verifikasi jika lebih dari 5 menit maka akan dikirimkan email notifikasi seacara Queue dengan Jobs Database.
