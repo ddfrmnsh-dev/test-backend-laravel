@@ -6,6 +6,8 @@ use App\Models\Bookmark;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+
 
 class BookmarkController extends Controller
 {
@@ -15,7 +17,10 @@ class BookmarkController extends Controller
         $user = Auth::guard('api')->user();
 
         try {
-            $bookmark = Bookmark::with(['posts.media', 'posts.categories'])->where('user_id', $user->id)->get();
+            $bookmark = Cache::remember('getBookmarkByUser', now()->addMinutes(5), function () use ($user) {
+                return Bookmark::with(['posts.media', 'posts.categories'])->where('user_id', $user->id)->get();
+            });
+
             if ($bookmark->isEmpty()) {
                 return response()->json([
                     'meta' => [
@@ -85,6 +90,8 @@ class BookmarkController extends Controller
                 'user_id' => $user->id,
                 'post_id' => $post_id
             ]);
+
+            Cache::forget('getBookmarkByUser');
             $meta = [
                 'message'   => "Successfully add bookmark",
                 'code'      => 200,
@@ -141,6 +148,9 @@ class BookmarkController extends Controller
                 'code'      => 200,
                 'status'    => true
             ];
+
+            Cache::forget('getBookmarkByUser');
+
             return response()->json([
                 'meta' => $meta,
                 'data' => [
