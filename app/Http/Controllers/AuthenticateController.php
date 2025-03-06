@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendVerificationReminderEmail;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
@@ -146,6 +147,7 @@ class AuthenticateController extends Controller
         ]);
 
         event(new Registered($user));
+        SendVerificationReminderEmail::dispatch($user)->delay(now()->addMinute(5));
 
         return response()->json(['message' => 'User registered successfully. Please verify your email.'], 201);
     }
